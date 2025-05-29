@@ -69,7 +69,7 @@ namespace FileTransparencyTest
 
         static void Main(string[] args)
         {
-            byte alpha = 230;      //change this to change across the board
+            byte alpha = 242;      //change this to change across the board     eg(50% = 128, 60% = 153, 70% = 179, 80% = 20, 90% = 230, 100% = 255)        where % is opacity value ie 100% means full opacity, 50% means half, 0 means none
 
             Console.WriteLine("File Explorer Transparency Controller"+
             "\n====================================\n"+
