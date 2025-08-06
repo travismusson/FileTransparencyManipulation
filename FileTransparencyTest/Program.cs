@@ -7,7 +7,8 @@ namespace FileTransparencyTest
 {
     internal class Program
     {
-        // Windows API constants
+        //utilized P/Invoke and microsoft c++ class to call windows api functions, microsoft docs
+        // Windows API constants        
         private const int GWL_EXSTYLE = -20;    // Index for extended window styles in GetWindowLong/SetWindowLong
         private const int WS_EX_LAYERED = 0x80000;  // Extended window style that enables layered windows (required for transparency)
         private const int LWA_ALPHA = 0x2;  // Flag that tells SetLayeredWindowAttributes to use alpha blending for transparency
@@ -69,14 +70,21 @@ namespace FileTransparencyTest
 
         static void Main(string[] args)
         {
-            byte alpha = 242;      //change this to change across the board     eg(50% = 128, 60% = 153, 70% = 179, 80% = 20, 90% = 230, 100% = 255)        where % is opacity value ie 100% means full opacity, 50% means half, 0 means none
+            //baseline var
+            byte alpha = 250;      //change this to change across the board     eg(50% = 128, 60% = 153, 70% = 179, 80% = 20, 90% = 230, 100% = 255)        where % is opacity value ie 100% means full opacity, 50% means half, 0 means none
+            //mainloop
+            MainMenu(alpha);      //call main menu function to start program
 
-            Console.WriteLine("File Explorer Transparency Controller"+
-            "\n====================================\n"+
-            "\nChoose an option:"+
-            "\n1. Set all File Explorer windows to 80% transparency"+
-            "\n2. Dynamic transparency control (follows active window)"+
-            "\n3. Reset transparency to 100% (opaque)\n"+
+        }
+
+        static void MainMenu(byte alpha)        //refactor to apply SOLID Principles
+        {
+            Console.WriteLine("File Explorer Transparency Controller" +
+            "\n====================================\n" +
+            "\nChoose an option:" +
+            $"\n1. Set all File Explorer windows to {quickMath(alpha)}% transparency" +
+            "\n2. Dynamic transparency control (follows active window)" +
+            "\n3. Reset transparency to 100% (opaque)\n" +
             "\nEnter your choice (1, 2, or 3): ");
 
             string choice = Console.ReadLine();     //not doing checks yet
@@ -124,7 +132,7 @@ namespace FileTransparencyTest
             Console.WriteLine($"Applied transparency to {explorerWindows.Count} File Explorer window(s).");
         }
 
-        static int quickMath(byte alpha)
+        static int quickMath(byte alpha)    
         {
             int result = (int)((alpha / 255.0) * 100);      //int cast to avoid integer division with byte and int
             return result;
@@ -135,8 +143,7 @@ namespace FileTransparencyTest
             //int quickMath = (alpha / 255) * 100;
             Console.WriteLine("Starting dynamic transparency control...");
             Console.WriteLine($"File Explorer windows will become {quickMath(alpha)}% transparent when active.");
-            Console.WriteLine("Press 'Q' to quit.");
-            Console.WriteLine();
+            Console.WriteLine("Press 'Q' to quit.\n");
 
             var explorerWindows = GetFileExplorerWindows();
             if (explorerWindows.Count == 0)
@@ -220,7 +227,7 @@ namespace FileTransparencyTest
             var className = new System.Text.StringBuilder(256);
             GetClassName(hWnd, className, className.Capacity);
 
-            // Check if it's a File Explorer window
+            // Check if it's a File Explorer window or chrome window
             string classNameStr = className.ToString();
             if (classNameStr != "CabinetWClass" && classNameStr != "Chrome_WidgetWin_1")      //class names for fileexplorer and chrome      //chrome isnt working atm coz it uses OPENGL and DIRECTX --nvrm i fixxed with wingetwin_1
                 return false;
