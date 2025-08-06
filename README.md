@@ -1,4 +1,4 @@
-# FileTransparencyTest
+# FileTransparencyManipulation
 *Currently Pre Alpha*
 
 *Current Features*
